@@ -1,1 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 카지노 비교 플랫폼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Pretendard', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            font-weight: 600;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* 메인 버튼 스타일 */
+        .main-button {
+            display: block;
+            width: 300px;
+            margin: 30px auto;
+            padding: 20px 40px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .main-button:hover {
+            background: linear-gradient(45deg, #ff5252, #ff9f43);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        /* 카테고리 섹션 스타일 */
+        .categories {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .categories h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        /* 슬라이딩 카테고리 컨테이너 */
+        .sliding-category-container {
+            position: relative;
+            height: 400px;
+            overflow: visible; /* 소분류가 잘리지 않도록 */
+        }
+
+        .category-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            align-items: center;
+        }
+
+        /* 호버 영역 확장 - 소분류까지 포함 */
+        .category-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: -650px; /* 소분류 영역까지 확장 */
+            bottom: 0;
+            z-index: 1;
+        }
+
+        /* 대분류 박스 (왼쪽) */
+        .category-main {
+            width: 250px;
+            height: 150px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .category-main:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(20px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .category-main h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* 소분류 슬라이딩 패널 (오른쪽) - 롤스로이스 우아한 접근 */
+        .subcategory-panel {
+            position: absolute;
+            right: -600px;
+            top: 0;
+            width: 600px;
+            height: 100%;
+            background: transparent;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 3.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* 매우 부드럽고 우아한 곡선 */
+            opacity: 0;
+            transform: translateX(150px) rotateY(20deg) scale(0.85);
+        }
+
+        .category-item:hover .subcategory-panel {
+            right: 20px;
+            opacity: 1;
+            transform: translateX(0) rotateY(0deg) scale(1);
+            transition: all 4s cubic-bezier(0.23, 1, 0.32, 1); /* 회장님 차 같은 부드러운 가속 */
+        }
+
+        /* 우주선 닫힐 때 - 더욱 품격있게 */
+        .category-item .subcategory-panel {
+            transition: all 4.5s cubic-bezier(0.165, 0.84, 0.44, 1); /* 더 우아하고 느린 퇴장 */
+        }
+
+        .subcategory-panel h4 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 8px;
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: all 1.5s cubic-bezier(0.25, 0.1, 0.25, 1) 1s; /* 우아한 지연 등장 */
+        }
+
+        .category-item:hover .subcategory-panel h4 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .subcategory-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .subcategory-item {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #2c3e50;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateX(50px) scale(0.8);
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.4);
+            color: #2c3e50;
+            letter-spacing: -0.3px;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        /* 클릭시 파지지직 전기 효과 */
+        .subcategory-item:active {
+            animation: electricShock 0.6s ease-out;
+            transform: scale(0.95);
+        }
+
+        @keyframes electricShock {
+            0% {
+                background: #fff;
+                box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+            }
+            10% {
+                background: #ff6b6b;
+                box-shadow: 
+                    0 0 20px #fff,
+                    0 0 40px #ff6b6b,
+                    0 0 60px #ff6b6b,
+                    0 0 80px #ff6b6b,
+                    inset 0 0 20px #fff;
+                border-color: #fff;
+            }
+            20% {
+                background: #4ecdc4;
+                box-shadow: 
+                    0 0 30px #fff,
+                    0 0 50px #4ecdc4,
+                    0 0 70px #4ecdc4,
+                    0 0 90px #4ecdc4,
+                    inset 0 0 30px #fff;
+            }
+            30% {
+                background: #ffe66d;
+                box-shadow: 
+                    0 0 40px #fff,
+                    0 0 60px #ffe66d,
+                    0 0 80px #ffe66d,
+                    0 0 100px #ffe66d,
+                    inset 0 0 40px #fff;
+            }
+            40% {
+                background: #a8e6cf;
+                box-shadow: 
+                    0 0 35px #fff,
+                    0 0 55px #a8e6cf,
+                    0 0 75px #a8e6cf,
+                    0 0 95px #a8e6cf,
+                    inset 0 0 35px #fff;
+            }
+            50% {
+                background: #ff8b94;
+                box-shadow: 
+                    0 0 50px #fff,
+                    0 0 70px #ff8b94,
+                    0 0 90px #ff8b94,
+                    0 0 110px #ff8b94,
+                    inset 0 0 50px #fff;
+            }
+            60% {
+                background: #667eea;
+                box-shadow: 
+                    0 0 25px #fff,
+                    0 0 45px #667eea,
+                    0 0 65px #667eea,
+                    0 0 85px #667eea,
+                    inset 0 0 25px #fff;
+            }
+            80% {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 
+                    0 0 15px rgba(255, 255, 255, 0.8),
+                    0 0 30px rgba(102, 126, 234, 0.6),
+                    0 0 45px rgba(118, 75, 162, 0.4);
+            }
+            100% {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 
+                    0 8px 25px rgba(102, 126, 234, 0.5),
+                    0 0 40px rgba(102, 126, 234, 0.3);
+            }
+        }
+
+        /* SF 번개 효과 */
+        .subcategory-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.4) 50%, 
+                transparent);
+            transition: all 0.6s ease;
+            z-index: 1;
+        }
+
+        .subcategory-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(102, 126, 234, 0.3) 0%, 
+                rgba(102, 126, 234, 0.1) 50%, 
+                transparent 100%);
+            transform: translate(-50%, -50%);
+            transition: all 0.4s ease;
+            z-index: 1;
+        }
+
+        .subcategory-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #fff;
+            transform: translateX(-5px) scale(1.02);
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.5),
+                0 0 40px rgba(102, 126, 234, 0.3),
+                inset 0 0 20px rgba(255,255,255,0.1);
+            font-weight: 800;
+        }
+
+        /* SF 번개 효과 호버시 */
+        .subcategory-item:hover::before {
+            left: 100%;
+        }
+
+        .subcategory-item:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* 번개 테두리 애니메이션 */
+        .subcategory-item:hover {
+            animation: electricBorder 1.5s infinite alternate;
+        }
+
+        @keyframes electricBorder {
+            0% {
+                box-shadow: 
+                    0 8px 25px rgba(102, 126, 234, 0.5),
+                    0 0 40px rgba(102, 126, 234, 0.3),
+                    0 0 20px rgba(255, 255, 255, 0.8),
+                    inset 0 0 20px rgba(255,255,255,0.1);
+            }
+            25% {
+                box-shadow: 
+                    0 8px 25px rgba(118, 75, 162, 0.5),
+                    0 0 40px rgba(118, 75, 162, 0.3),
+                    0 0 25px rgba(118, 75, 162, 0.9),
+                    inset 0 0 25px rgba(255,255,255,0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 8px 25px rgba(255, 107, 107, 0.5),
+                    0 0 40px rgba(255, 107, 107, 0.3),
+                    0 0 30px rgba(255, 107, 107, 1),
+                    inset 0 0 30px rgba(255,255,255,0.3);
+            }
+            75% {
+                box-shadow: 
+                    0 8px 25px rgba(254, 202, 87, 0.5),
+                    0 0 40px rgba(254, 202, 87, 0.3),
+                    0 0 35px rgba(254, 202, 87, 1),
+                    inset 0 0 35px rgba(255,255,255,0.4);
+            }
+            100% {
+                box-shadow: 
+                    0 8px 25px rgba(102, 126, 234, 0.5),
+                    0 0 40px rgba(102, 126, 234, 0.3),
+                    0 0 40px rgba(255, 255, 255, 1),
+                    inset 0 0 40px rgba(255,255,255,0.5);
+            }
+        }
+
+        /* 2열 순서: 롤스로이스 우아한 등장 - 품격있는 순차 진입 */
+        /* 첫 번째 열 (왼쪽) */
+        .category-item:hover .subcategory-item:nth-child(1) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.8s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(3) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 1.2s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(5) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 1.6s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(7) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 2.0s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(9) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 2.4s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(11) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 2.8s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(13) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 3.2s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(15) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 3.6s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(17) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 4.0s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(19) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 4.4s forwards; 
+        }
+
+        /* 두 번째 열 (오른쪽) */
+        .category-item:hover .subcategory-item:nth-child(2) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 4.8s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(4) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 5.2s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(6) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 5.6s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(8) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 6.0s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(10) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 6.4s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(12) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 6.8s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(14) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 7.2s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(16) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 7.6s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(18) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 8.0s forwards; 
+        }
+        .category-item:hover .subcategory-item:nth-child(20) { 
+            animation: luxuryArrival 3s cubic-bezier(0.25, 0.1, 0.25, 1) 8.4s forwards; 
+        }
+
+        @keyframes luxuryArrival {
+            0% {
+                opacity: 0;
+                transform: translateX(120px) scale(0.6) rotateY(30deg);
+                border-color: #34495e;
+                box-shadow: 0 2px 10px rgba(52, 73, 94, 0.2);
+            }
+            20% {
+                /* 롤스로이스 부드러운 시작 */
+                opacity: 0.2;
+                transform: translateX(100px) scale(0.7) rotateY(25deg);
+                border-color: #5d6d7e;
+                box-shadow: 0 4px 15px rgba(93, 109, 126, 0.3);
+            }
+            40% {
+                /* 우아한 중간 가속 */
+                opacity: 0.5;
+                transform: translateX(60px) scale(0.85) rotateY(15deg);
+                border-color: #85929e;
+                box-shadow: 0 6px 20px rgba(133, 146, 158, 0.4);
+            }
+            60% {
+                /* 품격있는 접근 */
+                opacity: 0.7;
+                transform: translateX(30px) scale(0.95) rotateY(8deg);
+                border-color: #aeb6bf;
+                box-shadow: 0 8px 25px rgba(174, 182, 191, 0.5);
+            }
+            80% {
+                /* 거의 도착 */
+                opacity: 0.9;
+                transform: translateX(5px) scale(1.02) rotateY(2deg);
+                border-color: #d5dbdb;
+                box-shadow: 0 10px 30px rgba(213, 219, 219, 0.6);
+            }
+            95% {
+                /* 마지막 정밀 조정 */
+                opacity: 0.95;
+                transform: translateX(-2px) scale(1.01) rotateY(0deg);
+                border-color: #ecf0f1;
+                box-shadow: 0 12px 35px rgba(236, 240, 241, 0.7);
+            }
+            100% {
+                /* 완벽한 정차 */
+                opacity: 1;
+                transform: translateX(0) scale(1) rotateY(0deg);
+                border-color: #ff6b6b;
+                box-shadow: 0 15px 40px rgba(255, 107, 107, 0.8), 0 8px 25px rgba(0,0,0,0.15);
+            }
+        }
+
+        /* 카테고리별 위치 조정 */
+        .category-item:nth-child(1) { top: 0; }
+        .category-item:nth-child(2) { top: 100px; }
+        .category-item:nth-child(3) { top: 200px; }
+        .category-item:nth-child(4) { top: 300px; }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-button {
+                width: 250px;
+                font-size: 1.2rem;
+            }
+
+            .sliding-category-container {
+                height: auto;
+                position: static;
+            }
+
+            .category-item {
+                position: static;
+                margin-bottom: 20px;
+                height: auto;
+            }
+
+            .subcategory-panel {
+                position: static;
+                right: auto;
+                width: 100%;
+                margin-top: 15px;
+                opacity: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .category-item:hover .subcategory-panel {
+                opacity: 1;
+                max-height: 400px;
+                right: auto;
+            }
+
+            .subcategory-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 스크롤바 스타일링 */
+        .subcategory-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .subcategory-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .subcategory-grid::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .subcategory-grid::-webkit-scrollbar-thumb:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <header class="header">
+            <h1>🎰 온라인 카지노 비교 플랫폼</h1>
+            <p>투명하고 정확한 카지노 사이트 비교 서비스</p>
+            <button class="main-button" onclick="startComparison()">
+                🚀 지금 비교 시작하기
+            </button>
+        </header>
+
+        <!-- 슬라이딩 카테고리 섹션 -->
+        <section class="categories">
+            <h2>카테고리별 비교 (마우스를 올려보세요!)</h2>
+            <div class="sliding-category-container">
+                
+                <!-- 카지노 카테고리 -->
+                <div class="category-item">
+                    <div class="category-main">
+                        <h3>🎰 카지노</h3>
+                        <p>바카라, 블랙잭, 룰렛</p>
+                    </div>
+                    <div class="subcategory-panel">
+                        <h4>🎰 카지노 세부 비교 항목</h4>
+                        <div class="subcategory-grid">
+                            <div class="subcategory-item" onclick="selectSubcategory('신규가입 보너스% 높은')">신규가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('첫 가입 보너스% 높은')">첫 가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('올인쿠폰% 높은')">올인쿠폰% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('첫충보너스% 높은')">첫충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('매충보너스% 높은')">매충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('입금시보너스% 높은')">입금시보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('캐시백% 높은')">캐시백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('배팅콤프% 높은')">배팅콤프% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('후기% 높은')">후기% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('지인 추천금 높은')">지인 추천금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('페이백% 높은')">페이백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('후기평점 높은')">후기평점 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('보험금 높은')">보험금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('이벤트 개수 높은')">이벤트 개수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('이용회원 수 높은')">이용회원 수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('환전가능 롤링% 낮은')">환전가능 롤링% 낮은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('정착지원금% 높은')">정착지원금% 높은</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 슬롯 카테고리 -->
+                <div class="category-item">
+                    <div class="category-main">
+                        <h3>🎮 슬롯</h3>
+                        <p>다양한 슬롯 게임</p>
+                    </div>
+                    <div class="subcategory-panel">
+                        <h4>🎮 슬롯 세부 비교 항목</h4>
+                        <div class="subcategory-grid">
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 신규가입 보너스% 높은')">신규가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 첫 가입 보너스% 높은')">첫 가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 올인쿠폰% 높은')">올인쿠폰% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 첫충보너스% 높은')">첫충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 매충보너스% 높은')">매충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 입금시보너스% 높은')">입금시보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 캐시백% 높은')">캐시백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 배팅콤프% 높은')">배팅콤프% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 후기% 높은')">후기% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 지인 추천금 높은')">지인 추천금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 페이백% 높은')">페이백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 후기평점 높은')">후기평점 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 보험금 높은')">보험금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 이벤트 개수 높은')">이벤트 개수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 이용회원 수 높은')">이용회원 수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 환전가능 롤링% 낮은')">환전가능 롤링% 낮은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('슬롯 정착지원금% 높은')">정착지원금% 높은</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스포츠 카테고리 -->
+                <div class="category-item">
+                    <div class="category-main">
+                        <h3>⚽ 스포츠</h3>
+                        <p>스포츠 베팅</p>
+                    </div>
+                    <div class="subcategory-panel">
+                        <h4>⚽ 스포츠 세부 비교 항목</h4>
+                        <div class="subcategory-grid">
+                            <div class="subcategory-item" onclick="selectSubcategory('같은 경기 크로스벳 되는곳')">같은 경기 크로스벳 되는곳</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('베팅당첨한도 높은')">베팅당첨한도 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('축베팅한도 높은')">축베팅한도 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 신규가입 보너스% 높은')">신규가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 첫 가입 보너스% 높은')">첫 가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 올인쿠폰% 높은')">올인쿠폰% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 첫충보너스% 높은')">첫충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 매충보너스% 높은')">매충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 입금시보너스% 높은')">입금시보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 캐시백% 높은')">캐시백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 배팅콤프% 높은')">배팅콤프% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 후기% 높은')">후기% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 지인 추천금 높은')">지인 추천금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 페이백% 높은')">페이백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 후기평점 높은')">후기평점 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 보험금 높은')">보험금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 이벤트 개수 높은')">이벤트 개수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 이용회원 수 높은')">이용회원 수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 환전가능 롤링% 낮은')">환전가능 롤링% 낮은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('스포츠 정착지원금% 높은')">정착지원금% 높은</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 미니게임 카테고리 -->
+                <div class="category-item">
+                    <div class="category-main">
+                        <h3>🎲 미니게임</h3>
+                        <p>간단한 미니 게임들</p>
+                    </div>
+                    <div class="subcategory-panel">
+                        <h4>🎲 미니게임 세부 비교 항목</h4>
+                        <div class="subcategory-grid">
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 신규가입 보너스% 높은')">신규가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 첫 가입 보너스% 높은')">첫 가입 보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 올인쿠폰% 높은')">올인쿠폰% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 첫충보너스% 높은')">첫충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 매충보너스% 높은')">매충보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 입금시보너스% 높은')">입금시보너스% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 캐시백% 높은')">캐시백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 배팅콤프% 높은')">배팅콤프% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 후기% 높은')">후기% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 지인 추천금 높은')">지인 추천금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 페이백% 높은')">페이백% 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 후기평점 높은')">후기평점 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 보험금 높은')">보험금 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 이벤트 개수 높은')">이벤트 개수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 이용회원 수 높은')">이용회원 수 높은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 환전가능 롤링% 낮은')">환전가능 롤링% 낮은</div>
+                            <div class="subcategory-item" onclick="selectSubcategory('미니게임 정착지원금% 높은')">정착지원금% 높은</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 소분류 선택 함수
+        function selectSubcategory(subcategoryName) {
+            alert(`"${subcategoryName}" 카테고리가 선택되었습니다.\n해당 조건으로 사이트를 비교하는 기능을 구현할 예정입니다.`);
+        }
+
+        // 메인 버튼 클릭 이벤트
+        function startComparison() {
+            alert('카지노 사이트 비교를 시작합니다!');
+        }
+    </script>
+</body>
+</html>
