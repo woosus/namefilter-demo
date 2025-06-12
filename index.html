@@ -1,1 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 네임필터 - 최고의 혜택을 찾아드립니다</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #667eea;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .filter-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .filter-item:hover, .filter-item.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Results Section */
+        .results-section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Site Cards */
+        .site-list {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 1rem;
+        }
+
+        .site-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .site-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .rank-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .site-preview {
+            width: 280px;
+            height: 120px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .site-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .site-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .bonus-section {
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .bonus-percentage {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #e91e63;
+            margin-bottom: 0.2rem;
+        }
+
+        .bonus-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .insurance-amount {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 0.3rem;
+        }
+
+        .insurance-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .rating-section {
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .stars {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .star-filled {
+            color: #ffc107;
+        }
+
+        .star-empty {
+            color: #e9ecef;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .visit-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .visit-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 3rem 2rem;
+            margin: 3rem auto;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p, .footer-section li {
+            color: #ccc;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #555;
+            padding-top: 1rem;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .site-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .site-preview {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .category-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Site Preview Images */
+        .site-preview-gamble {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f0f23);
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 150, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.2) 0%, transparent 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-preview-gamble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .site-preview-betend {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-image: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .site-preview-betend::after {
+            content: 'BLACKJACK';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .casino-preview-3 {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .casino-preview-4 {
+            background: linear-gradient(45deg, #43e97b, #38f9d7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .casino-preview-5 {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <span>🔍</span> 네임필터
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">홈</a></li>
+                <li><a href="#search">검색</a></li>
+                <li><a href="#ranking">순위</a></li>
+                <li><a href="#review">리뷰</a></li>
+                <li><a href="#register">사이트등록</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🎯 최고의 혜택을 찾아드립니다</h1>
+        <p>투명한 비교, 공정한 순위. 원하는 조건의 사이트를 쉽고 빠르게 찾으세요.</p>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <h2 class="search-title">어떤 혜택을 찾고 계신가요?</h2>
+        
+        <div class="category-tabs">
+            <div class="tab active" onclick="selectCategory('casino')">🎰 카지노</div>
+            <div class="tab" onclick="selectCategory('sports')">⚽ 스포츠</div>
+            <div class="tab" onclick="selectCategory('slot')">🎮 슬롯</div>
+            <div class="tab" onclick="selectCategory('mini')">🎲 미니게임</div>
+        </div>
+
+        <div class="filter-grid">
+            <div class="filter-item active" onclick="selectFilter(this, 'first-bonus')">
+                <strong>첫충보너스 %</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'signup-bonus')">
+                <strong>가입보너스 %</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'every-bonus')">
+                <strong>매충보너스 %</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'cashback')">
+                <strong>캐시백 %</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'comp')">
+                <strong>배팅콤프 %</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'rating')">
+                <strong>후기평점</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'rolling')">
+                <strong>롤링</strong><br>
+                <small>낮은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'events')">
+                <strong>이벤트 개수</strong><br>
+                <small>많은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'members')">
+                <strong>이용회원 수</strong><br>
+                <small>많은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'referral')">
+                <strong>지인추천금</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'insurance')">
+                <strong>보험금</strong><br>
+                <small>높은 순</small>
+            </div>
+            <div class="filter-item" onclick="selectFilter(this, 'settlement')">
+                <strong>정착지원금 %</strong><br>
+                <small>높은 순</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="results-header">
+            <h2>🏆 첫충보너스 순위 (카지노)</h2>
+            <div class="results-stats">
+                <div class="stat">
+                    <div class="stat-number">247</div>
+                    <div class="stat-label">등록 사이트</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">15,847</div>
+                    <div class="stat-label">이용 회원</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">실시간</div>
+                    <div class="stat-label">업데이트</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-list">
+            <!-- 1위 사이트 -->
+            <div class="site-card">
+                <div class="rank-number">1</div>
+                <div class="site-preview site-preview-gamble">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.3rem; margin-bottom: 5px;">🎰</div>
+                        <div>겜블시티</div>
+                        <div style="font-size: 0.8rem; opacity: 0.8;">2층 특별 이벤트</div>
+                    </div>
+                    <div class="site-name">겜블시티</div>
+                </div>
+                <div class="bonus-section">
+                    <div class="bonus-percentage">100%</div>
+                    <div class="bonus-label">첫충보너스</div>
+                    <div class="insurance-amount">보험 500만원</div>
+                    <div class="insurance-label">보험</div>
+                </div>
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star-filled">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div class="rating-text">4.9 (1,234)</div>
+                </div>
+                <button class="visit-button">방문하기</button>
+            </div>
+
+            <!-- 2위 사이트 -->
+            <div class="site-card">
+                <div class="rank-number">2</div>
+                <div class="site-preview site-preview-betend">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.3rem; margin-bottom: 5px;">🃏</div>
+                        <div>벳엔드</div>
+                        <div style="font-size: 0.8rem; opacity: 0.8;">24시간 라이브</div>
+                    </div>
+                    <div class="site-name">벳엔드</div>
+                </div>
+                <div class="bonus-section">
+                    <div class="bonus-percentage">85%</div>
+                    <div class="bonus-label">첫충보너스</div>
+                    <div class="insurance-amount">보험 300만원</div>
+                    <div class="insurance-label">보험</div>
+                </div>
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star-filled">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div class="rating-text">4.8 (987)</div>
+                </div>
+                <button class="visit-button">방문하기</button>
+            </div>
+
+            <!-- 3위 사이트 -->
+            <div class="site-card">
+                <div class="rank-number">3</div>
+                <div class="site-preview casino-preview-3">
+                    🎰 럭키슬롯
+                    <div class="site-name">럭키슬롯</div>
+                </div>
+                <div class="bonus-section">
+                    <div class="bonus-percentage">80%</div>
+                    <div class="bonus-label">첫충보너스</div>
+                    <div class="insurance-amount">보험 200만원</div>
+                    <div class="insurance-label">보험</div>
+                </div>
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star-filled">⭐⭐⭐⭐</span><span class="star-empty">⭐</span>
+                    </div>
+                    <div class="rating-text">4.7 (756)</div>
+                </div>
+                <button class="visit-button">방문하기</button>
+            </div>
+
+            <!-- 4위 사이트 -->
+            <div class="site-card">
+                <div class="rank-number">4</div>
+                <div class="site-preview casino-preview-4">
+                    🌟 스타카지노
+                    <div class="site-name">스타카지노</div>
+                </div>
+                <div class="bonus-section">
+                    <div class="bonus-percentage">75%</div>
+                    <div class="bonus-label">첫충보너스</div>
+                    <div class="insurance-amount">보험 150만원</div>
+                    <div class="insurance-label">보험</div>
+                </div>
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star-filled">⭐⭐⭐⭐</span><span class="star-empty">⭐</span>
+                    </div>
+                    <div class="rating-text">4.6 (543)</div>
+                </div>
+                <button class="visit-button">방문하기</button>
+            </div>
+
+            <!-- 5위 사이트 -->
+            <div class="site-card">
+                <div class="rank-number">5</div>
+                <div class="site-preview casino-preview-5">
+                    🔥 에이스게임
+                    <div class="site-name">에이스게임</div>
+                </div>
+                <div class="bonus-section">
+                    <div class="bonus-percentage">70%</div>
+                    <div class="bonus-label">첫충보너스</div>
+                    <div class="insurance-amount">보험 100만원</div>
+                    <div class="insurance-label">보험</div>
+                </div>
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star-filled">⭐⭐⭐⭐</span><span class="star-empty">⭐</span>
+                    </div>
+                    <div class="rating-text">4.5 (432)</div>
+                </div>
+                <button class="visit-button">방문하기</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="features-title">배너는 그만!<br>원하는 스타일의 회사에 최고의 혜택을!</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">이벤트로만 공정한</h3>
+                <p class="feature-desc">회사 프로모션의 수위를 매일마다 최고의 혜택만 대신 상단에 순위별로 표시 됩니다</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3 class="feature-title">배너 과부화 없음</h3>
+                <p class="feature-desc">더 이상 배너 광고로 얽혀진 배너스레기들은 받지 않습니다. 가치 순으로 정렬한, 가장 강력한 보너스를 제공하는 사이트만 확인하세요.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3 class="feature-title">현실적인 보험 역할</h3>
+                <p class="feature-desc">5억까지 무제한 위험 보험인지도모를 보험은 NO 확실한 안전지대에서 백린 전성적인 보성</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">❄️</div>
+                <h3 class="feature-title">모든업체등록비용 무료</h3>
+                <p class="feature-desc">모든 회사를 위한 무료 등록, 심력으로 중남한 수있는 플렛폼</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title">원하는 조건을 빠르게</h3>
+                <p class="feature-desc">유형, 보강, 보너스별 정력하세요. 몇 초 만에 자신에게맞는 곳을 찾아보세요.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <h3 class="feature-title">조건에 맞는 업체에서</h3>
+                <p class="feature-desc">카드를 탈퇴한 보너스 조건, 정각가능놀게임을 정현한 모든 정보를 바로 확인할 수 있습니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-section">
+                    <h4>🔍 네임필터</h4>
+                    <p>투명하고 공정한 비교플랫폼</p>
+                    <p>최고의 혜택을 찾아드립니다</p>
+                </div>
+                <div class="footer-section">
+                    <h4>서비스</h4>
+                    <ul>
+                        <li>실시간 순위 비교</li>
+                        <li>조건별 검색</li>
+                        <li>사용자 리뷰</li>
+                        <li>무료 사이트 등록</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>카테고리</h4>
+                    <ul>
+                        <li>카지노</li>
+                        <li>스포츠</li>
+                        <li>슬롯</li>
+                        <li>미니게임</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li>24시간 실시간 상담</li>
+                        <li>FAQ</li>
+                        <li>사이트 제보</li>
+                        <li>파트너십 문의</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 네임필터. 모든 권리 보유. | 투명한 비교, 공정한 선택</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function selectCategory(category) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Update results section title
+            const categoryNames = {
+                'casino': '카지노',
+                'sports': '스포츠', 
+                'slot': '슬롯',
+                'mini': '미니게임'
+            };
+            
+            document.querySelector('.results-header h2').textContent = 
+                `🏆 첫충보너스 순위 (${categoryNames[category]})`;
+                
+            // Update site previews based on category
+            updateSitePreviews(category);
+        }
+
+        function selectFilter(element, filterType) {
+            // Remove active class from all filter items
+            document.querySelectorAll('.filter-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            element.classList.add('active');
+            
+            // Update results based on filter
+            updateResults(filterType);
+        }
+
+        function updateResults(filterType) {
+            const filterNames = {
+                'first-bonus': '첫충보너스',
+                'signup-bonus': '가입보너스',
+                'every-bonus': '매충보너스',
+                'cashback': '캐시백',
+                'comp': '배팅콤프',
+                'rating': '후기평점',
+                'rolling': '롤링 (낮은순)',
+                'events': '이벤트 개수',
+                'members': '이용회원 수',
+                'referral': '지인추천금',
+                'insurance': '보험금',
+                'settlement': '정착지원금'
+            };
+            
+            const activeCategory = document.querySelector('.tab.active').textContent.replace(/[^가-힣]/g, '');
+            
+            document.querySelector('.results-header h2').textContent = 
+                `🏆 ${filterNames[filterType]} 순위 (${activeCategory})`;
+                
+            // Simulate data change based on filter
+            updateSiteData(filterType);
+        }
+
+        function updateSitePreviews(category) {
+            const siteCards = document.querySelectorAll('.site-card');
+            
+            if (category === 'sports') {
+                // 스포츠 카테고리
+                siteCards[0].querySelector('.site-preview').className = 'site-preview casino-preview-1';
+                siteCards[0].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">⚽</div><div>스포츠킹</div><div style="font-size: 0.8rem; opacity: 0.8;">실시간 베팅</div></div><div class="site-name">스포츠킹</div>';
+                
+                siteCards[1].querySelector('.site-preview').className = 'site-preview casino-preview-2';
+                siteCards[1].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🏀</div><div>농구마스터</div><div style="font-size: 0.8rem; opacity: 0.8;">NBA 전문</div></div><div class="site-name">농구마스터</div>';
+                
+                siteCards[2].querySelector('.site-preview').className = 'site-preview casino-preview-3';
+                siteCards[2].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">⚾</div><div>야구챔피언</div><div style="font-size: 0.8rem; opacity: 0.8;">KBO/MLB</div></div><div class="site-name">야구챔피언</div>';
+                
+                siteCards[3].querySelector('.site-preview').className = 'site-preview casino-preview-4';
+                siteCards[3].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎾</div><div>테니스프로</div><div style="font-size: 0.8rem; opacity: 0.8;">윔블던 특집</div></div><div class="site-name">테니스프로</div>';
+                
+                siteCards[4].querySelector('.site-preview').className = 'site-preview casino-preview-5';
+                siteCards[4].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🏁</div><div>레이싱스타</div><div style="font-size: 0.8rem; opacity: 0.8;">F1 시즌</div></div><div class="site-name">레이싱스타</div>';
+                
+            } else if (category === 'slot') {
+                // 슬롯 카테고리
+                siteCards[0].querySelector('.site-preview').className = 'site-preview casino-preview-1';
+                siteCards[0].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎮</div><div>슬롯킹덤</div><div style="font-size: 0.8rem; opacity: 0.8;">메가웨이즈</div></div><div class="site-name">슬롯킹덤</div>';
+                
+                siteCards[1].querySelector('.site-preview').className = 'site-preview casino-preview-2';
+                siteCards[1].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🍒</div><div>체리슬롯</div><div style="font-size: 0.8rem; opacity: 0.8;">클래식 스타일</div></div><div class="site-name">체리슬롯</div>';
+                
+                siteCards[2].querySelector('.site-preview').className = 'site-preview casino-preview-3';
+                siteCards[2].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">💎</div><div>다이아몬드</div><div style="font-size: 0.8rem; opacity: 0.8;">잭팟 전문</div></div><div class="site-name">다이아몬드</div>';
+                
+                siteCards[3].querySelector('.site-preview').className = 'site-preview casino-preview-4';
+                siteCards[3].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🌟</div><div>스타슬롯</div><div style="font-size: 0.8rem; opacity: 0.8;">프리스핀</div></div><div class="site-name">스타슬롯</div>';
+                
+                siteCards[4].querySelector('.site-preview').className = 'site-preview casino-preview-5';
+                siteCards[4].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎰</div><div>메가스핀</div><div style="font-size: 0.8rem; opacity: 0.8;">보너스 게임</div></div><div class="site-name">메가스핀</div>';
+                
+            } else if (category === 'mini') {
+                // 미니게임 카테고리
+                siteCards[0].querySelector('.site-preview').className = 'site-preview casino-preview-1';
+                siteCards[0].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎲</div><div>미니게임</div><div style="font-size: 0.8rem; opacity: 0.8;">다양한 게임</div></div><div class="site-name">미니게임</div>';
+                
+                siteCards[1].querySelector('.site-preview').className = 'site-preview casino-preview-2';
+                siteCards[1].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎯</div><div>다트킹</div><div style="font-size: 0.8rem; opacity: 0.8;">정확한 조준</div></div><div class="site-name">다트킹</div>';
+                
+                siteCards[2].querySelector('.site-preview').className = 'site-preview casino-preview-3';
+                siteCards[2].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎳</div><div>볼링마스터</div><div style="font-size: 0.8rem; opacity: 0.8;">스트라이크!</div></div><div class="site-name">볼링마스터</div>';
+                
+                siteCards[3].querySelector('.site-preview').className = 'site-preview casino-preview-4';
+                siteCards[3].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎪</div><div>게임랜드</div><div style="font-size: 0.8rem; opacity: 0.8;">놀이동산</div></div><div class="site-name">게임랜드</div>';
+                
+                siteCards[4].querySelector('.site-preview').className = 'site-preview casino-preview-5';
+                siteCards[4].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎈</div><div>펀게임</div><div style="font-size: 0.8rem; opacity: 0.8;">재미있는 게임</div></div><div class="site-name">펀게임</div>';
+                
+            } else {
+                // 기본 카지노 카테고리 - 겜블시티와 벳엔드 포함
+                siteCards[0].querySelector('.site-preview').className = 'site-preview site-preview-gamble';
+                siteCards[0].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎰</div><div>겜블시티</div><div style="font-size: 0.8rem; opacity: 0.8;">2층 특별 이벤트</div></div><div class="site-name">겜블시티</div>';
+                
+                siteCards[1].querySelector('.site-preview').className = 'site-preview site-preview-betend';
+                siteCards[1].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🃏</div><div>벳엔드</div><div style="font-size: 0.8rem; opacity: 0.8;">24시간 라이브</div></div><div class="site-name">벳엔드</div>';
+                
+                siteCards[2].querySelector('.site-preview').className = 'site-preview casino-preview-3';
+                siteCards[2].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🎰</div><div>럭키슬롯</div><div style="font-size: 0.8rem; opacity: 0.8;">행운의 스핀</div></div><div class="site-name">럭키슬롯</div>';
+                
+                siteCards[3].querySelector('.site-preview').className = 'site-preview casino-preview-4';
+                siteCards[3].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🌟</div><div>스타카지노</div><div style="font-size: 0.8rem; opacity: 0.8;">VIP 전용</div></div><div class="site-name">스타카지노</div>';
+                
+                siteCards[4].querySelector('.site-preview').className = 'site-preview casino-preview-5';
+                siteCards[4].querySelector('.site-preview').innerHTML = '<div style="text-align: center;"><div style="font-size: 1.3rem; margin-bottom: 5px;">🔥</div><div>에이스게임</div><div style="font-size: 0.8rem; opacity: 0.8;">핫한 게임</div></div><div class="site-name">에이스게임</div>';
+            }
+        }
+
+        function updateSiteData(filterType) {
+            const siteCards = document.querySelectorAll('.site-card');
+            
+            // Sample data for different filters
+            const sampleData = {
+                'first-bonus': [
+                    { bonus: '100%', insurance: '500만원', rating: '4.9', reviews: '1,234' },
+                    { bonus: '85%', insurance: '300만원', rating: '4.8', reviews: '987' },
+                    { bonus: '80%', insurance: '200만원', rating: '4.7', reviews: '756' },
+                    { bonus: '75%', insurance: '150만원', rating: '4.6', reviews: '543' },
+                    { bonus: '70%', insurance: '100만원', rating: '4.5', reviews: '432' }
+                ],
+                'cashback': [
+                    { bonus: '15%', insurance: '300만원', rating: '4.8', reviews: '876' },
+                    { bonus: '12%', insurance: '500만원', rating: '4.9', reviews: '1,234' },
+                    { bonus: '10%', insurance: '200만원', rating: '4.7', reviews: '654' },
+                    { bonus: '8%', insurance: '150만원', rating: '4.6', reviews: '432' },
+                    { bonus: '5%', insurance: '100만원', rating: '4.5', reviews: '321' }
+                ],
+                'rating': [
+                    { bonus: '85%', insurance: '300만원', rating: '4.9', reviews: '1,456' },
+                    { bonus: '100%', insurance: '500만원', rating: '4.8', reviews: '1,234' },
+                    { bonus: '70%', insurance: '200만원', rating: '4.8', reviews: '987' },
+                    { bonus: '80%', insurance: '150만원', rating: '4.7', reviews: '756' },
+                    { bonus: '60%', insurance: '100만원', rating: '4.7', reviews: '543' }
+                ]
+            };
+            
+            const data = sampleData[filterType] || sampleData['first-bonus'];
+            
+            siteCards.forEach((card, index) => {
+                if (data[index]) {
+                    const bonusElement = card.querySelector('.bonus-percentage');
+                    const insuranceElement = card.querySelector('.insurance-amount');
+                    const ratingElement = card.querySelector('.rating-text');
+                    
+                    bonusElement.textContent = data[index].bonus;
+                    insuranceElement.textContent = `보험 ${data[index].insurance}`;
+                    ratingElement.textContent = `${data[index].rating} (${data[index].reviews})`;
+                    
+                    // Update stars based on rating
+                    const starsElement = card.querySelector('.stars');
+                    const rating = parseFloat(data[index].rating);
+                    const fullStars = Math.floor(rating);
+                    const hasHalfStar = rating % 1 !== 0;
+                    
+                    let starsHtml = '';
+                    for (let i = 0; i < fullStars; i++) {
+                        starsHtml += '<span class="star-filled">⭐</span>';
+                    }
+                    for (let i = fullStars; i < 5; i++) {
+                        starsHtml += '<span class="star-empty">⭐</span>';
+                    }
+                    
+                    starsElement.innerHTML = starsHtml;
+                }
+            });
+            
+            // Add animation to cards
+            siteCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add click handlers to visit buttons
+            document.querySelectorAll('.visit-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Simulate site visit
+                    this.textContent = '이동중...';
+                    setTimeout(() => {
+                        this.textContent = '방문하기';
+                    }, 1000);
+                });
+            });
+
+            // Add hover effects to site cards
+            document.querySelectorAll('.site-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
