@@ -106,6 +106,71 @@
             animation: textShimmer 2s ease-in-out infinite;
         }
 
+        /* 네온 테두리 효과 */
+        @keyframes neonBorder {
+            0% {
+                border-color: #ff0080;
+                box-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 60px #ff0080;
+            }
+            25% {
+                border-color: #0080ff;
+                box-shadow: 0 0 20px #0080ff, 0 0 40px #0080ff, 0 0 60px #0080ff;
+            }
+            50% {
+                border-color: #80ff00;
+                box-shadow: 0 0 20px #80ff00, 0 0 40px #80ff00, 0 0 60px #80ff00;
+            }
+            75% {
+                border-color: #ff8000;
+                box-shadow: 0 0 20px #ff8000, 0 0 40px #ff8000, 0 0 60px #ff8000;
+            }
+            100% {
+                border-color: #ff0080;
+                box-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 60px #ff0080;
+            }
+        }
+
+        .neon-border {
+            border: 3px solid;
+            animation: neonBorder 2s linear infinite;
+        }
+
+        /* 글자별 애니메이션 */
+        @keyframes charPulse {
+            0% { 
+                transform: scale(1); 
+                color: #60a5fa;
+                text-shadow: none;
+            }
+            50% { 
+                transform: scale(1.2); 
+                color: #fbbf24;
+                text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+            }
+            100% { 
+                transform: scale(1); 
+                color: #60a5fa;
+                text-shadow: none;
+            }
+        }
+
+        .char-animation {
+            display: inline-block;
+            animation: charPulse 0.6s ease-in-out;
+        }
+
+        .char-0 { animation-delay: 0s; }
+        .char-1 { animation-delay: 0.3s; }
+        .char-2 { animation-delay: 0.6s; }
+        .char-3 { animation-delay: 0.9s; }
+        .char-4 { animation-delay: 1.2s; }
+        .char-5 { animation-delay: 1.5s; }
+        .char-6 { animation-delay: 1.8s; }
+        .char-7 { animation-delay: 2.1s; }
+        .char-8 { animation-delay: 2.4s; }
+        .char-9 { animation-delay: 2.7s; }
+        .char-10 { animation-delay: 3.0s; }
+
         /* 즉각 반응하되 슬로우 무빙 */
         .instant-slow {
             transition: all 0.05s ease-out;
@@ -146,7 +211,7 @@
                 subtitle: '네임필이벤트진행수1위',
                 description: '슬롯3만쿠폰30명',
                 subtext: '네임필 선호도1위',
-                badge: '겜블시티',
+                badge: '보험500만원',
                 badgeColor: 'bg-red-500',
                 ranking: 'NO.1',
                 rating: 4.8,
@@ -155,10 +220,10 @@
             {
                 id: 2,
                 title: '첫충전보너스29%2위',
-                subtitle: '페이백지급총액높은순2위',
-                description: '올인이벤트%높은순3위',
-                badge: '벳라이브',
-                badgeColor: 'bg-purple-600',
+                subtitle: '무료폰트버젼',
+                description: '컬러폰트는비용발생',
+                badge: '무보험',
+                badgeColor: 'bg-gray-600',
                 rating: 4.9,
                 users: '2.1K'
             },
@@ -186,6 +251,29 @@
                 users: '1.8K'
             }
         ];
+
+        // 글자별 애니메이션 함수
+        function animateText(text, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const chars = text.split('');
+            container.innerHTML = chars.map((char, index) => 
+                `<span class="char-animation char-${index}">${char}</span>`
+            ).join('');
+            
+            // 애니메이션 반복
+            setInterval(() => {
+                chars.forEach((char, index) => {
+                    const span = container.querySelector(`.char-${index}`);
+                    if (span) {
+                        span.style.animation = 'none';
+                        span.offsetHeight; // 강제 리플로우
+                        span.style.animation = `charPulse 0.6s ease-in-out ${index * 0.3}s`;
+                    }
+                });
+            }, 4000); // 4초마다 반복
+        }
 
         // 이벤트 핸들러
         function setActiveCategory(category) {
@@ -283,6 +371,8 @@
                         ${gameItems.map(item => `
                             <div 
                                 class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 cursor-pointer instant-slow relative ${
+                                    item.id === 1 ? 'neon-border' : ''
+                                } ${
                                     state.hoveredCard === item.id 
                                         ? 'transform scale-105 shadow-2xl shadow-blue-500/20 ring-2 ring-blue-500/50 active' 
                                         : 'hover:shadow-lg hover:scale-102'
@@ -372,12 +462,16 @@
                                     <div class="flex-1 p-3">
                                         <div class="flex items-start justify-between mb-2">
                                             <div>
-                                                <h3 class="text-white font-bold text-base leading-tight transition-all duration-300 ${
+                                                <h3 class="text-white font-bold leading-tight transition-all duration-300 ${
+                                                    item.id === 1 ? 'text-2xl' : 'text-base'
+                                                } ${
                                                     state.hoveredCard === item.id ? 'text-yellow-300' : ''
                                                 }">${item.title}</h3>
                                                 <p class="text-gray-300 text-sm transition-all duration-300 ${
                                                     state.hoveredCard === item.id ? 'text-blue-300' : ''
-                                                }">${item.subtitle}</p>
+                                                }" ${item.id === 1 ? `id="subtitle-animated"` : ''}>${
+                                                    item.id === 1 ? '<span id="subtitle-text">' + item.subtitle + '</span>' : item.subtitle
+                                                }</p>
                                             </div>
                                             <div class="flex items-center gap-1 transition-all duration-300 ${
                                                 state.hoveredCard === item.id ? 'scale-110' : ''
@@ -398,7 +492,9 @@
 
                                         <!-- Bottom Section -->
                                         <div class="flex items-center justify-between">
-                                            <span class="${item.badgeColor} text-white text-xs font-bold px-2 py-1 rounded transition-all duration-300 ${
+                                            <span class="${item.badgeColor} text-white font-bold px-2 py-1 rounded transition-all duration-300 ${
+                                                item.id === 1 ? 'text-base border-2 border-red-600 transform scale-150' : 'text-xs'
+                                            } ${
                                                 state.hoveredCard === item.id ? 'animate-pulse scale-105' : ''
                                             }">
                                                 ${item.badge}
@@ -478,6 +574,14 @@
                     </div>
                 </div>
             `;
+            
+            // 첫 번째 카드의 subtitle 애니메이션 시작
+            setTimeout(() => {
+                const container = document.getElementById('subtitle-text');
+                if (container) {
+                    animateText('네임필이벤트진행수1위', 'subtitle-text');
+                }
+            }, 50);
         }
 
         // 초기 렌더링
