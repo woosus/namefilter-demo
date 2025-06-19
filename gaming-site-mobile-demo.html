@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>게임사이트 순위 - 모바일 앱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes magneticPull {
+            0% { 
+                transform: translateX(0) scale(1); 
+                background-position: 0% 50%;
+            }
+            20% { 
+                transform: translateX(-2px) scale(1.01); 
+                background-position: 20% 50%;
+            }
+            40% { 
+                transform: translateX(-4px) scale(1.03); 
+                background-position: 40% 50%;
+            }
+            60% { 
+                transform: translateX(-3px) scale(1.02); 
+                background-position: 60% 50%;
+            }
+            80% { 
+                transform: translateX(-2px) scale(1.04); 
+                background-position: 80% 50%;
+            }
+            100% { 
+                transform: translateX(0) scale(1.06); 
+                background-position: 100% 50%;
+            }
+        }
+        
+        .magnetic-effect {
+            animation: magneticPull 3s ease-in-out infinite;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
+            background-size: 400% 400%;
+        }
+
+        @keyframes smoothExpand {
+            0% { 
+                transform: scale(1) rotate(0deg);
+                filter: brightness(1) saturate(1);
+            }
+            100% { 
+                transform: scale(1.2) rotate(0deg);
+                filter: brightness(1.25) saturate(1.15);
+            }
+        }
+
+        .smooth-expand {
+            animation: smoothExpand 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes pulse-ring {
+            0% { 
+                transform: scale(0.8); 
+                opacity: 1; 
+                border-width: 2px;
+            }
+            100% { 
+                transform: scale(1.6); 
+                opacity: 0; 
+                border-width: 1px;
+            }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { 
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        .button-glow {
+            animation: buttonGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textShimmer {
+            0% { 
+                background-position: -300% center;
+                transform: scale(1);
+            }
+            100% { 
+                background-position: 300% center;
+                transform: scale(1);
+            }
+        }
+
+        .text-shimmer {
+            background: linear-gradient(90deg, #ffffff 20%, #ffd700 40%, #ff6b35 60%, #ffffff 80%);
+            background-size: 300% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 2s ease-in-out infinite;
+        }
+
+        /* 즉각 반응하되 슬로우 무빙 */
+        .instant-slow {
+            transition: all 0.05s ease-out;
+        }
+
+        .instant-slow:hover {
+            transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .natural-slow {
+            transition: all 0.1s ease-out;
+        }
+
+        .natural-slow.active {
+            transition: all 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <div id="app"></div>
+
+    <script>
+        // 상태 관리
+        let state = {
+            activeCategory: 'All',
+            activeSortBy: 'Recommended',
+            hoveredCard: null
+        };
+
+        // 데이터
+        const categories = ['All', 'Sports', 'Casino', 'Poker'];
+        const sortOptions = ['Recommended', 'Highest Rating', 'Newest'];
+
+        const gameItems = [
+            {
+                id: 1,
+                title: 'OAI 데일리레드',
+                subtitle: '검블시티',
+                description: '출동 3만쿠폰30명',
+                subtext: '실시간진 브랜드복기게이밍',
+                badge: 'HOT',
+                badgeColor: 'bg-red-500',
+                rating: 4.8,
+                users: '1.2K'
+            },
+            {
+                id: 2,
+                title: '신규이벤트이벤트',
+                subtitle: '프리어선언국약1위',
+                description: '페이백진급국약놀은2천',
+                badge: '벳라이브',
+                badgeColor: 'bg-purple-600',
+                rating: 4.9,
+                users: '2.1K'
+            },
+            {
+                id: 3,
+                title: '첫충 29%',
+                subtitle: '데일리이벤트가다양',
+                description: '가입자많은순1위',
+                subtext: '모든 첫충은전용',
+                badge: '점프시티',
+                badgeColor: 'bg-green-600',
+                ranking: 'NO.2',
+                rating: 4.7,
+                users: '3.5K'
+            },
+            {
+                id: 4,
+                title: '첫충 28%',
+                subtitle: '첫충혜택3위',
+                description: '8,000,000원',
+                badge: '벳에디',
+                badgeColor: 'bg-blue-600',
+                ranking: 'NO.3',
+                rating: 4.6,
+                users: '1.8K'
+            }
+        ];
+
+        // 이벤트 핸들러
+        function setActiveCategory(category) {
+            state.activeCategory = category;
+            render();
+        }
+
+        function setActiveSortBy(option) {
+            state.activeSortBy = option;
+            render();
+        }
+
+        function handleCardHover(itemId) {
+            state.hoveredCard = itemId;
+            render();
+        }
+
+        function handleCardLeave() {
+            state.hoveredCard = null;
+            render();
+        }
+
+        // 렌더링 함수
+        function render() {
+            const app = document.getElementById('app');
+            
+            app.innerHTML = `
+                <div class="min-h-screen bg-gray-900">
+                    <!-- Header -->
+                    <div class="bg-gray-800 px-4 py-3 shadow-lg">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            <h1 class="text-white text-lg font-semibold">Search</h1>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="bg-gray-800 px-4 pb-4">
+                        <div class="relative">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Online Gambling Sites"
+                                class="w-full bg-gray-700 text-white placeholder-gray-400 pl-10 pr-10 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                            />
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center hover:rotate-90 transition-transform duration-300 cursor-pointer">
+                                <span class="text-gray-300 text-sm">×</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="px-4 py-3 bg-gray-800">
+                        <div class="flex gap-2">
+                            ${categories.map(category => `
+                                <button
+                                    onclick="setActiveCategory('${category}')"
+                                    class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
+                                        state.activeCategory === category
+                                            ? 'bg-blue-600 text-white shadow-lg'
+                                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    }"
+                                >
+                                    ${category}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Sort By -->
+                    <div class="px-4 py-3 bg-gray-800 border-b border-gray-700">
+                        <div class="flex gap-2">
+                            <span class="text-gray-400 text-sm font-medium mr-2">Sort by</span>
+                            ${sortOptions.map(option => `
+                                <button
+                                    onclick="setActiveSortBy('${option}')"
+                                    class="px-3 py-1 rounded-full text-sm transition-all duration-300 ${
+                                        state.activeSortBy === option
+                                            ? 'bg-gray-600 text-white'
+                                            : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                                    }"
+                                >
+                                    ${option}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Game Items List -->
+                    <div class="px-4 py-4 space-y-4">
+                        ${gameItems.map(item => `
+                            <div 
+                                class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 cursor-pointer instant-slow relative ${
+                                    state.hoveredCard === item.id 
+                                        ? 'transform scale-105 shadow-2xl shadow-blue-500/20 ring-2 ring-blue-500/50 active' 
+                                        : 'hover:shadow-lg hover:scale-102'
+                                }"
+                                onmouseenter="handleCardHover(${item.id})"
+                                onmouseleave="handleCardLeave()"
+                            >
+                                <div class="flex">
+                                    <!-- Image Section -->
+                                    <div class="relative bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center instant-slow overflow-hidden ${
+                                        state.hoveredCard === item.id ? 'w-40 h-32 smooth-expand active' : 'w-32 h-24'
+                                    }">
+                                        <!-- 게임사이트 미니 UI -->
+                                        <div class="absolute inset-0 bg-gradient-to-br from-gray-900/80 to-gray-800/80 instant-slow"></div>
+                                        <div class="relative z-10 instant-slow ${
+                                            state.hoveredCard === item.id ? 'scale-110 active' : ''
+                                        }">
+                                            <!-- 상단 헤더 바 -->
+                                            <div class="bg-gradient-to-r from-blue-400 to-purple-500 mb-2 mx-auto rounded-full opacity-80 instant-slow ${
+                                                state.hoveredCard === item.id ? 'w-24 h-1.5 animate-pulse active' : 'w-20 h-1.5'
+                                            }"></div>
+                                            
+                                            <!-- 메인 콘텐츠 -->
+                                            <div class="text-white text-center">
+                                                <div class="text-xs font-bold mb-1 instant-slow ${
+                                                    state.hoveredCard === item.id ? 'text-yellow-300 active' : ''
+                                                }">GAME</div>
+                                                <div class="text-lg font-bold instant-slow ${
+                                                    state.hoveredCard === item.id ? 'text-yellow-200 active' : ''
+                                                }">SITE</div>
+                                            </div>
+                                            
+                                            <!-- 게임 슬롯 시뮬레이션 -->
+                                            <div class="grid grid-cols-4 gap-1 mt-2 mx-auto instant-slow ${
+                                                state.hoveredCard === item.id ? 'w-20 active' : 'w-16'
+                                            }">
+                                                <div class="w-2 h-2 bg-red-500 rounded-sm opacity-70 instant-slow ${
+                                                    state.hoveredCard === item.id ? 'animate-pulse bg-red-400 active' : ''
+                                                }"></div>
+                                                <div class="w-2 h-2 bg-green-500 rounded-sm opacity-70 instant-slow ${
+                                                    state.hoveredCard === item.id ? 'animate-pulse bg-green-400 active' : ''
+                                                }" style="animation-delay: 0.2s"></div>
+                                                <div class="w-2 h-2 bg-blue-500 rounded-sm opacity-70 instant-slow ${
+                                                    state.hoveredCard === item.id ? 'animate-pulse bg-blue-400 active' : ''
+                                                }" style="animation-delay: 0.4s"></div>
+                                                <div class="w-2 h-2 bg-yellow-500 rounded-sm opacity-70 instant-slow ${
+                                                    state.hoveredCard === item.id ? 'animate-pulse bg-yellow-400 active' : ''
+                                                }" style="animation-delay: 0.6s"></div>
+                                            </div>
+                                            
+                                            <!-- 하단 액션 바 -->
+                                            <div class="flex gap-1 mt-2 justify-center instant-slow">
+                                                <div class="bg-green-500 opacity-80 rounded-full instant-slow ${
+                                                    state.hoveredCard === item.id ? 'w-5 h-1 bg-green-400 animate-pulse active' : 'w-4 h-1'
+                                                }"></div>
+                                                <div class="bg-orange-500 opacity-80 rounded-full instant-slow ${
+                                                    state.hoveredCard === item.id ? 'w-5 h-1 bg-orange-400 animate-pulse active' : 'w-4 h-1'
+                                                }" style="animation-delay: 0.4s"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        ${item.ranking ? `
+                                            <div class="absolute top-2 right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded transition-all duration-300 ${
+                                                state.hoveredCard === item.id ? 'animate-pulse scale-110' : ''
+                                            }">
+                                                ${item.ranking}
+                                            </div>
+                                        ` : ''}
+                                        
+                                        <!-- Hover Effect Overlay -->
+                                        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 instant-slow ${
+                                            state.hoveredCard === item.id ? 'opacity-100 active' : 'opacity-0'
+                                        }">
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <div class="w-8 h-8 border-2 border-white rounded-full instant-slow ${
+                                                    state.hoveredCard === item.id ? 'scale-110 pulse-ring active' : 'scale-0'
+                                                }"></div>
+                                                <!-- 추가 링 효과 -->
+                                                <div class="absolute w-12 h-12 border border-yellow-400 rounded-full instant-slow ${
+                                                    state.hoveredCard === item.id ? 'scale-100 opacity-50 active' : 'scale-0 opacity-0'
+                                                }" style="animation-delay: 0.6s"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content Section -->
+                                    <div class="flex-1 p-3">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <div>
+                                                <h3 class="text-white font-bold text-base leading-tight transition-all duration-300 ${
+                                                    state.hoveredCard === item.id ? 'text-yellow-300' : ''
+                                                }">${item.title}</h3>
+                                                <p class="text-gray-300 text-sm transition-all duration-300 ${
+                                                    state.hoveredCard === item.id ? 'text-blue-300' : ''
+                                                }">${item.subtitle}</p>
+                                            </div>
+                                            <div class="flex items-center gap-1 transition-all duration-300 ${
+                                                state.hoveredCard === item.id ? 'scale-110' : ''
+                                            }">
+                                                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                </svg>
+                                                <span class="text-white text-sm font-medium">${item.rating}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-1 mb-3">
+                                            <p class="text-blue-400 text-sm font-medium transition-all duration-300 ${
+                                                state.hoveredCard === item.id ? 'text-yellow-400' : ''
+                                            }">${item.description}</p>
+                                            ${item.subtext ? `<p class="text-gray-400 text-xs">${item.subtext}</p>` : ''}
+                                        </div>
+
+                                        <!-- Bottom Section -->
+                                        <div class="flex items-center justify-between">
+                                            <span class="${item.badgeColor} text-white text-xs font-bold px-2 py-1 rounded transition-all duration-300 ${
+                                                state.hoveredCard === item.id ? 'animate-pulse scale-105' : ''
+                                            }">
+                                                ${item.badge}
+                                            </span>
+                                            <div class="flex items-center gap-2">
+                                                <div class="flex items-center gap-1 text-gray-400 text-xs transition-all duration-300 ${
+                                                    state.hoveredCard === item.id ? 'text-green-400' : ''
+                                                }">
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                                                    </svg>
+                                                    <span>${item.users}</span>
+                                                </div>
+                                                <div class="flex items-center gap-1 text-gray-400 text-xs transition-all duration-300 ${
+                                                    state.hoveredCard === item.id ? 'text-purple-400' : ''
+                                                }">
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"/>
+                                                    </svg>
+                                                    <span>보너스</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons with Instant-Slow Response -->
+                                <div class="flex border-t border-gray-700 instant-slow relative overflow-hidden ${
+                                    state.hoveredCard === item.id ? 'bg-gradient-to-r from-gray-800 to-gray-700 active' : ''
+                                }">
+                                    <button class="py-3 text-center text-gray-400 hover:bg-gray-700 instant-slow relative ${
+                                        state.hoveredCard === item.id 
+                                            ? 'flex-none w-20 opacity-40 transform -translate-x-3 scale-95 active' 
+                                            : 'flex-1'
+                                    }">
+                                        <span class="instant-slow ${
+                                            state.hoveredCard === item.id ? 'text-xs active' : 'text-sm'
+                                        }">${
+                                            state.hoveredCard === item.id ? '무료' : '무료체험'
+                                        }</span>
+                                    </button>
+                                    
+                                    <!-- Instant-Slow Magnetic Join Button -->
+                                    <button class="py-3 text-center instant-slow transform relative overflow-hidden ${
+                                        state.hoveredCard === item.id 
+                                            ? 'flex-1 magnetic-effect button-glow font-bold text-base active' 
+                                            : 'flex-1 bg-blue-600 text-white hover:bg-blue-700'
+                                    }">
+                                        <!-- 버튼 내부 웨이브 효과 -->
+                                        ${state.hoveredCard === item.id ? `
+                                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent transform -skew-x-12 -translate-x-full animate-pulse"></div>
+                                        ` : ''}
+                                        
+                                        <span class="relative z-10 instant-slow ${
+                                            state.hoveredCard === item.id ? 'text-shimmer font-black active' : 'text-white'
+                                        }">
+                                            ${state.hoveredCard === item.id ? '🚀 지금 가입하기! 🚀' : '가입하기'}
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <!-- Hover Glow Effect -->
+                                <div class="absolute inset-0 pointer-events-none transition-opacity duration-500 rounded-xl ${
+                                    state.hoveredCard === item.id 
+                                        ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-100' 
+                                        : 'opacity-0'
+                                }"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Load More Button -->
+                    <div class="px-4 py-6">
+                        <button class="w-full bg-gray-700 text-white py-3 rounded-lg hover:bg-gray-600 transition-all duration-300 hover:scale-105 transform hover:shadow-xl">
+                            ✨ 더 많은 게임사이트 보기 ✨
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 초기 렌더링
+        render();
+    </script>
+</body>
+</html>
