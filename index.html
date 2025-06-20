@@ -106,49 +106,228 @@
             animation: textShimmer 2s ease-in-out infinite;
         }
 
-        /* 네온 테두리 효과 */
+        /* 네온 테두리 효과 - 기본 녹색 형광등 */
         @keyframes neonBorder {
             0% {
-                border-color: #ff0080;
-                box-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 60px #ff0080;
-            }
-            25% {
-                border-color: #0080ff;
-                box-shadow: 0 0 20px #0080ff, 0 0 40px #0080ff, 0 0 60px #0080ff;
+                border-color: #00ff88;
+                box-shadow: 
+                    0 0 10px #00ff88, 
+                    0 0 20px #00ff88, 
+                    0 0 30px #00ff88;
             }
             50% {
-                border-color: #80ff00;
-                box-shadow: 0 0 20px #80ff00, 0 0 40px #80ff00, 0 0 60px #80ff00;
-            }
-            75% {
-                border-color: #ff8000;
-                box-shadow: 0 0 20px #ff8000, 0 0 40px #ff8000, 0 0 60px #ff8000;
+                border-color: #00cc6a;
+                box-shadow: 
+                    0 0 15px #00cc6a, 
+                    0 0 25px #00cc6a, 
+                    0 0 35px #00cc6a;
             }
             100% {
-                border-color: #ff0080;
-                box-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 60px #ff0080;
+                border-color: #00ff88;
+                box-shadow: 
+                    0 0 10px #00ff88, 
+                    0 0 20px #00ff88, 
+                    0 0 30px #00ff88;
+            }
+        }
+
+        /* 금속 반사 스포트라이트 - 시계방향으로 테두리를 따라 이동 */
+        @keyframes metalReflection {
+            0% {
+                background: conic-gradient(
+                    from 0deg,
+                    transparent 0deg,
+                    transparent 340deg,
+                    rgba(255, 255, 255, 0.1) 345deg,
+                    rgba(255, 255, 255, 0.4) 350deg,
+                    rgba(255, 255, 255, 0.8) 355deg,
+                    rgba(255, 255, 255, 1) 358deg,
+                    rgba(200, 255, 200, 0.9) 360deg,
+                    rgba(255, 255, 255, 1) 362deg,
+                    rgba(255, 255, 255, 0.8) 365deg,
+                    rgba(255, 255, 255, 0.4) 370deg,
+                    rgba(255, 255, 255, 0.1) 375deg,
+                    transparent 380deg,
+                    transparent 360deg
+                );
+                filter: blur(0.3px);
+            }
+            100% {
+                background: conic-gradient(
+                    from 360deg,
+                    transparent 0deg,
+                    transparent 340deg,
+                    rgba(255, 255, 255, 0.1) 345deg,
+                    rgba(255, 255, 255, 0.4) 350deg,
+                    rgba(255, 255, 255, 0.8) 355deg,
+                    rgba(255, 255, 255, 1) 358deg,
+                    rgba(200, 255, 200, 0.9) 360deg,
+                    rgba(255, 255, 255, 1) 362deg,
+                    rgba(255, 255, 255, 0.8) 365deg,
+                    rgba(255, 255, 255, 0.4) 370deg,
+                    rgba(255, 255, 255, 0.1) 375deg,
+                    transparent 380deg,
+                    transparent 360deg
+                );
+                filter: blur(0.3px);
+            }
+        }
+
+        /* 테두리 밝기 변화 - 스포트라이트가 지나가는 부분이 더 밝게 */
+        @keyframes borderBrightness {
+            0% {
+                border-color: #00ff88;
+                box-shadow: 
+                    /* 상단이 가장 밝음 */
+                    0 -5px 25px rgba(255, 255, 255, 0.8),
+                    5px -5px 20px rgba(0, 255, 136, 0.6),
+                    5px 0px 15px rgba(0, 255, 136, 0.4),
+                    5px 5px 15px rgba(0, 255, 136, 0.4),
+                    0px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 0px 15px rgba(0, 255, 136, 0.4),
+                    -5px -5px 20px rgba(0, 255, 136, 0.6),
+                    0 0 30px rgba(0, 255, 136, 0.5);
+            }
+            25% {
+                border-color: #00ff88;
+                box-shadow: 
+                    /* 우측이 가장 밝음 */
+                    0 -5px 15px rgba(0, 255, 136, 0.4),
+                    5px -5px 20px rgba(0, 255, 136, 0.6),
+                    5px 0px 25px rgba(255, 255, 255, 0.8),
+                    5px 5px 20px rgba(0, 255, 136, 0.6),
+                    0px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 0px 15px rgba(0, 255, 136, 0.4),
+                    -5px -5px 15px rgba(0, 255, 136, 0.4),
+                    0 0 30px rgba(0, 255, 136, 0.5);
+            }
+            50% {
+                border-color: #00ff88;
+                box-shadow: 
+                    /* 하단이 가장 밝음 */
+                    0 -5px 15px rgba(0, 255, 136, 0.4),
+                    5px -5px 15px rgba(0, 255, 136, 0.4),
+                    5px 0px 15px rgba(0, 255, 136, 0.4),
+                    5px 5px 20px rgba(0, 255, 136, 0.6),
+                    0px 5px 25px rgba(255, 255, 255, 0.8),
+                    -5px 5px 20px rgba(0, 255, 136, 0.6),
+                    -5px 0px 15px rgba(0, 255, 136, 0.4),
+                    -5px -5px 15px rgba(0, 255, 136, 0.4),
+                    0 0 30px rgba(0, 255, 136, 0.5);
+            }
+            75% {
+                border-color: #00ff88;
+                box-shadow: 
+                    /* 좌측이 가장 밝음 */
+                    0 -5px 15px rgba(0, 255, 136, 0.4),
+                    5px -5px 15px rgba(0, 255, 136, 0.4),
+                    5px 0px 15px rgba(0, 255, 136, 0.4),
+                    5px 5px 15px rgba(0, 255, 136, 0.4),
+                    0px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 5px 20px rgba(0, 255, 136, 0.6),
+                    -5px 0px 25px rgba(255, 255, 255, 0.8),
+                    -5px -5px 20px rgba(0, 255, 136, 0.6),
+                    0 0 30px rgba(0, 255, 136, 0.5);
+            }
+            100% {
+                border-color: #00ff88;
+                box-shadow: 
+                    /* 다시 상단이 가장 밝음 */
+                    0 -5px 25px rgba(255, 255, 255, 0.8),
+                    5px -5px 20px rgba(0, 255, 136, 0.6),
+                    5px 0px 15px rgba(0, 255, 136, 0.4),
+                    5px 5px 15px rgba(0, 255, 136, 0.4),
+                    0px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 5px 15px rgba(0, 255, 136, 0.4),
+                    -5px 0px 15px rgba(0, 255, 136, 0.4),
+                    -5px -5px 20px rgba(0, 255, 136, 0.6),
+                    0 0 30px rgba(0, 255, 136, 0.5);
             }
         }
 
         .neon-border {
-            border: 3px solid;
-            animation: neonBorder 2s linear infinite;
+            position: relative;
+            border: 2px solid #00ff88;
+            animation: 
+                neonBorder 3s ease-in-out infinite,
+                borderBrightness 4s linear infinite;
+            overflow: hidden;
+        }
+
+        /* 기본 은은한 내부 빛 */
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(0, 255, 136, 0.1) 0%,
+                rgba(0, 255, 136, 0.05) 50%,
+                transparent 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 금속 반사 스포트라이트 - 테두리를 따라 시계방향으로 이동 */
+        .neon-border::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: inherit;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 340deg,
+                rgba(255, 255, 255, 0.1) 345deg,
+                rgba(255, 255, 255, 0.4) 350deg,
+                rgba(255, 255, 255, 0.8) 355deg,
+                rgba(255, 255, 255, 1) 358deg,
+                rgba(200, 255, 200, 0.9) 360deg,
+                rgba(255, 255, 255, 1) 362deg,
+                rgba(255, 255, 255, 0.8) 365deg,
+                rgba(255, 255, 255, 0.4) 370deg,
+                rgba(255, 255, 255, 0.1) 375deg,
+                transparent 380deg,
+                transparent 360deg
+            );
+            animation: metalReflection 4s linear infinite;
+            z-index: 3;
+            pointer-events: none;
+            mask: 
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            padding: 2px;
+            filter: blur(0.3px);
         }
 
         /* 글자별 애니메이션 */
         @keyframes charPulse {
             0% { 
-                transform: scale(1); 
+                transform: scale(1.5); 
                 color: #60a5fa;
                 text-shadow: none;
             }
             50% { 
-                transform: scale(1.2); 
+                transform: scale(1.8); 
                 color: #fbbf24;
                 text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
             }
             100% { 
-                transform: scale(1); 
+                transform: scale(1.5); 
                 color: #60a5fa;
                 text-shadow: none;
             }
@@ -157,6 +336,8 @@
         .char-animation {
             display: inline-block;
             animation: charPulse 0.6s ease-in-out;
+            font-size: 1.5em;
+            font-weight: bold;
         }
 
         .char-0 { animation-delay: 0s; }
